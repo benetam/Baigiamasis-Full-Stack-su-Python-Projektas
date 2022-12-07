@@ -1,0 +1,66 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="col-12 col-sm-9 col-md-7 col-lg-5" style="padding:0px;margin-bottom:15px;">
+  <div class="content-section">
+    <form method="POST">
+      {% if form.non_field_errors %}
+      <div class="alert alert-block alert-danger">
+        {{ form.non_field_errors.0 }}
+      </div>
+      {% elif form.errors %}
+      <div class="alert alert-block alert-danger">
+        Neteisingai įvesti duomenys
+      </div>
+      {% endif %}
+      {% csrf_token %}
+      <div class="auth_headline">
+        <p>Sukurkite paskyrą</p>
+      </div>
+      <input id="id_username" name="username" value="Vartotojo vardas" placeholder="Vartotojo vardas" class="auth_input" type="text" autocomplete="username" maxlength="50" required>
+      <span class="auth_helptext">
+        Iki 50 ženklų. Tik raidės, skaičiai @/./+/-/_ ženklai.
+      </span>
+      {% if form.username.errors %}
+      {% for error in form.username.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      <input id="id_password1" name="password1" placeholder="Slaptažodis" class="auth_input" type="password" autocomplete="new-password" required>
+      <span class="auth_helptext">
+        <ul>
+          <li>Slaptažodį pravalo sudaryti nemažiau kaip 8 simboliai</li>
+          <li>Negali sudaryti vien skaičiai</li>
+        </ul>
+      </span>
+      {% if form.password1.errors %}
+      {% for error in form.password1.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      <input id="id_password2" name="password2" placeholder="Slaptažodis" class="auth_input" type="password" autocomplete="new-password" required>
+      <span class="auth_helptext">
+        Pakartokite slaptažodį
+      </span>
+      {% if form.password2.errors %}
+      {% for error in form.password2.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      <button class="button auth_button" type="submit" style="margin-top:38px;">Registruotis</button>
+    </form>
+    <div style="padding-top:1rem;">
+      <div class="auth_note">
+        Jau turite paskyrą? <a style="margin-left:4px;color:#009b72;" href="{% url 'login' %}">Prisijunkite</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

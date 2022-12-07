@@ -1,0 +1,132 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="col-12" style="padding:0px;">
+  <div class="content-section">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="article-form">
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="form-type">Sukurti naują įrašą:</div>
+
+
+        {% if form.is_bound %}
+          {% if form.title.errors %}
+          <input name="title" type="text" class="is-invalid" id="id_title"  placeholder="Pavadinimas" style="margin-top:10px;">
+          {% for error in form.title.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <input name="title" type="text" class="is-valid" id="id_title" placeholder="Pavadinimas" style="margin-top:10px;">
+
+          <div class="is-valid"  style="margin-top:20px;">
+                    <i class="fa fa-caret-down selectArrow"></i>
+                    <select id="category" class="taskCategory" name="category_select">
+                    <option class="disabled" value="">Pasirinkite Kategoriją</option>
+                    {% for category in categories %}
+                        <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                    </select>
+                    <label for="category"></label>
+                </div>
+        {% endif %}
+
+
+        {% if form.content.errors %}
+          <textarea name="content" cols="40" rows="5" class="textarea is-invalid" required id="id_content" value="" placeholder="Jūsų įrašas(privaloma)" style="margin-top:20px;">Jūsų įrašas(privaloma)</textarea>
+          {% for error in form.content.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <textarea name="content" cols="40" rows="5" class="textarea is-valid" required id="id_content" value="" placeholder="Jūsų įrašas(privaloma)" style="margin-top:20px;">Jūsų įrašas(privaloma)</textarea>
+        {% endif %}
+
+        {% if form.date_posted.errors %}
+          <input name="date_posted" type="text" class="is-invalid" id="id_date_posted" value="{{ form.date_posted.value }}" style="margin-top:20px;">
+          {% for error in form.date_posted.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <input name="date_posted" type="text" class="is-valid" id="id_date_posted" value="{{ form.date_posted.value }}" style="margin-top:20px;">
+        {% endif %}
+
+        <label class="fileContainer" ondragover="dragOver(event,this)" ondragleave="leaveDrop(this)" ondrop="onDrop(event,this)" style="margin-top:20px;">
+          <div style="overflow:hidden;text-align:center;">
+            <div class="dragDropIcon">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-image" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9c0 .013 0 .027.002.04V12l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094L15 9.499V3.5a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm4.502 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+              </svg>
+            </div>
+            <div class="fileContainerFileName fileName" ondrop="onDrop(event)"><span style="color:rgb(73,80,87);">Nuotrauka prie jūsų žinutės. Įkelkite čia</span></div>
+            <div class="fileContainerFileName fileNameDrop" ondrop="onDrop(event)" style="display:none;"><span style="color:rgb(73,80,87);">Įkelti</span></div>
+          </div>
+          <input accept="image/*" name="image" id="id_image" onchange="fileContainerChangeFile(event,this)" style="margin-top:25px;" type="file"/>
+        </label>
+        <input type="checkbox" name="image-clear" id="image-clear_id" style="display:none;">
+
+        {% if form.image.errors %}
+          {% for error in form.image.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+
+
+        {% else %}
+
+          <input name="title" type="text" id="id_title" value="Pavadinimas" placeholder="Pavadinimas" style="margin-top:10px;">
+
+          <textarea name="content" cols="40" rows="5" class="textarea" required="" id="id_content" value="" placeholder="Jūsų įrašas(privaloma)" style="margin-top:20px;">Jūsų įrašas(privaloma)</textarea>
+
+          <input name="date_posted" type="text" id="id_date_posted" value="{{ form.date_posted.value|date:'Y-m-d G:i:s'}}" style="margin-top:20px;">
+
+          <label class="fileContainer" style="margin-top:20px;" ondragover="dragOver(event,this)" ondragleave="leaveDrop(this)" ondrop="onDrop(event,this)">
+            <div style="overflow:hidden;text-align:center;">
+              <div class="dragDropIcon">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-image" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9c0 .013 0 .027.002.04V12l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094L15 9.499V3.5a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm4.502 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                </svg>
+              </div>
+              <div class="fileContainerFileName fileName" ondrop="onDrop(event)"><span style="color:rgb(73,80,87);">Nuotrauka prie jūsų žinutės. Įkelkite čia</span></div>
+              <div class="fileContainerFileName fileNameDrop" ondrop="onDrop(event)" style="display:none;"><span style="color:rgb(73,80,87);">Įkelti</span></div>
+            </div>
+            <input accept="image/*" name="image" id="id_image" onchange="fileContainerChangeFile(event,this,'image-clear_id')" style="margin-top:25px;" type="file"/>
+          </label>
+
+
+        {% endif %}
+
+      </div>
+      <button type="submit" class="button secondary_button short_button" style="margin-top:35px;margin-bottom:25px;">Išsaugoti</button>
+
+      {% if form.errors %}
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+
+<script src="{% static 'blog/js/drag-and-drop.js' %}"></script>
+
+{% endblock content %}
